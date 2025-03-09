@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Pomodoro Timer</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Pomodoro Timer</h1>
+        <div class="timer">25:00</div>
+        <div class="buttons">
+            <button class="start">START</button>
+            <button class="stop">STOP</button>
+            <button class="reset">RESET</button>
+            <button class="short-break">SHORT BREAK</button>
+            <button class="long-break">LONG BREAK</button>
+        </div>
+    </div>
+
+    <audio id="alarm" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+
+<script>
+        let timer;
+let timeLeft = 25 * 60;
+let isRunning = false;
+const timerDisplay = document.querySelector(".timer");
+const startBtn = document.querySelector(".start");
+const stopBtn = document.querySelector(".stop");
+const resetBtn = document.querySelector(".reset");
+const shortBreakBtn = document.querySelector(".short-break");
+const longBreakBtn = document.querySelector(".long-break");
+const alarm = document.getElementById("alarm");
+
+function updateDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerDisplay.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+}
+
+function startTimer() {
+    if (!isRunning) {
+        isRunning = true;
+        timer = setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateDisplay();
+            } else {
+                clearInterval(timer);
+                alarm.play();
+                isRunning = false;
+            }
+        }, 1000);
+    }
+}
+
+function stopTimer() {
+    clearInterval(timer);
+    isRunning = false;
+}
+
+function resetTimer() {
+    stopTimer();
+    timeLeft = 25 * 60;
+    updateDisplay();
+}
+
+function setShortBreak() {
+    stopTimer();
+    timeLeft = 5 * 60;
+    updateDisplay();
+}
+
+function setLongBreak() {
+    stopTimer();
+    timeLeft = 15 * 60;
+    updateDisplay();
+}
+
+startBtn.addEventListener("click", startTimer);
+stopBtn.addEventListener("click", stopTimer);
+resetBtn.addEventListener("click", resetTimer);
+shortBreakBtn.addEventListener("click", setShortBreak);
+longBreakBtn.addEventListener("click", setLongBreak);
+
+updateDisplay();
+</script>
+
+</body>
+
+</html>
